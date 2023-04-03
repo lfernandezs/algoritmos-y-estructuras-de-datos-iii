@@ -31,15 +31,15 @@ bool es_cuadrado_magico(vector<vector<int>> matriz, int n) {
         for (int j = 0; j < n; j++) {
             suma_filas[i] += matriz[i][j];
             suma_columnas[j] += matriz[i][j];
-            
+
             if (i == j) suma_diagonales[0] += matriz[i][j];
             if (i + j == n - 1) suma_diagonales[1] += matriz[i][j];
         }
     }
 
     return suma_numero_magico(suma_filas, n, numero_magico)
-        && suma_numero_magico(suma_columnas, n, numero_magico)
-        && suma_numero_magico(suma_diagonales, 2, numero_magico);
+           && suma_numero_magico(suma_columnas, n, numero_magico)
+           && suma_numero_magico(suma_diagonales, 2, numero_magico);
 }
 
 int k_esimo_cuadrado_magico(int k, int n, vector<vector<int>> &solucion_parcial, int i, int j, set<int> valores_disponibles) {
@@ -57,7 +57,7 @@ int k_esimo_cuadrado_magico(int k, int n, vector<vector<int>> &solucion_parcial,
         valores_disponibles_copy.erase(v);
         k_esimo_cuadrado_magico(k, n, solucion_parcial, i + (int)(j+1 == n), (j+1) % n, valores_disponibles_copy);
     }
-    
+
     return 0;
 }
 
