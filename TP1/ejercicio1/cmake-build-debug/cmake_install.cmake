@@ -1,4 +1,4 @@
-# Install script for directory: /home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/TP1/Ejercicio 1
+# Install script for directory: /home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/algoritmos-y-estructuras-de-datos-iii/TP1/ejercicio1
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/TP1/Ejercicio 1/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/algoritmos-y-estructuras-de-datos-iii/TP1/ejercicio1/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

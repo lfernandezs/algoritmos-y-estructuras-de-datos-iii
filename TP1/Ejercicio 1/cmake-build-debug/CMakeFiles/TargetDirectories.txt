@@ -1,3 +1,0 @@
-/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/TP1/Ejercicio 1/cmake-build-debug/CMakeFiles/Ejercicio_1.dir
-/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/TP1/Ejercicio 1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/TP1/Ejercicio 1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
