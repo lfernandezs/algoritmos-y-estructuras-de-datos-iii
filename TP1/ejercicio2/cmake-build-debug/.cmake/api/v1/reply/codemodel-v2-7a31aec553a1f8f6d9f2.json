@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/TP1/Ejercicio 2/cmake-build-debug",
-		"source" : "/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/TP1/Ejercicio 2"
+		"build" : "/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/algoritmos-y-estructuras-de-datos-iii/TP1/ejercicio2/cmake-build-debug",
+		"source" : "/home/luli/Dropbox/Exactas/Algoritmos y Estructuras de Datos III/TPs/algoritmos-y-estructuras-de-datos-iii/TP1/ejercicio2"
 	},
 	"version" : 
 	{

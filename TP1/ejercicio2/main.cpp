@@ -1,8 +1,12 @@
 #include <vector>
 #include <math.h>
 
-enum operacion { SUMA, MULTIPLICACION, POTENCIA, INDEFINIDO };
+enum operacion { SUMA, MULTIPLICACION, POTENCIA, RESTA, INDEFINIDO };
 using namespace std;
+
+int mod(int x, int m) {
+    return ((x % m) + m) % m;
+}
 
 int resolver(vector<operacion> operaciones, int valores[]) {
     int resultado = valores[0];
@@ -20,6 +24,10 @@ int resolver(vector<operacion> operaciones, int valores[]) {
                 resultado = pow(resultado, valores[i+1]);
                 break;
 
+            case RESTA:
+                resultado -= valores[i+1];
+                break;
+
             default:
                 return -1;
                 break;
@@ -28,32 +36,40 @@ int resolver(vector<operacion> operaciones, int valores[]) {
     return resultado;
 }
 
-vector<operacion> operaciones_que_resuelven(int i, double w, int valores[]) {
-    if ( i == 0) {
-        if (valores[i] == w) return vector<operacion>(0);
+vector<operacion> operaciones_que_resuelven(int i, int r, int m, int valores[]) {
+    if ( i == 0 ) {
+        if (mod(valores[i], m) == r) return vector<operacion>(0);
         else return vector<operacion>(1, INDEFINIDO);
     }
-    vector<operacion> suma = operaciones_que_resuelven(i - 1, w - valores[i], valores);
+    vector<operacion> suma = operaciones_que_resuelven(i - 1, mod((r - valores[i]), m), m, valores);
     suma.push_back(SUMA);
 
-    if (resolver(suma, valores) == w) return suma;
+    if (mod(resolver(suma, valores), m) == r) return suma;
 
-    vector<operacion> multiplicacion = operaciones_que_resuelven(i - 1, w / valores[i], valores);
+    vector<operacion> multiplicacion = operaciones_que_resuelven(i - 1, mod((r / valores[i]), m), m, valores);
     multiplicacion.push_back(MULTIPLICACION);
 
-    if (resolver(multiplicacion, valores) == w) return multiplicacion;
+    if (mod(resolver(multiplicacion, valores), m) == r) return multiplicacion;
 
-    vector<operacion> potencia = operaciones_que_resuelven(i - 1, pow(w, (double)(1 / (double)(valores[i]))), valores);
+    // TODO: ver si la conversión de pow a int está bien
+    // TODO: ver si la operación de raíz no es muy costosa.
+    vector<operacion> potencia = operaciones_que_resuelven(i - 1, mod((int)pow(r, (double)(1 / (double)(valores[i]))), m), m, valores);
     potencia.push_back(POTENCIA);
 
-    if (resolver(potencia, valores) == w) return potencia;
+    if (mod(resolver(potencia, valores), m) == r) return potencia;
+
+    vector<operacion> resta = operaciones_que_resuelven(i - 1, mod(r + valores[i], m), m, valores);
+    resta.push_back(RESTA);
+
+    if (mod(resolver(resta, valores), m) == r) return resta;
 
     return vector<operacion>(1, INDEFINIDO);
 
 }
 
 int main() {
-    int V[5] = { 3, 1, 5, 2, 1 };
-    vector<operacion> resultado = operaciones_que_resuelven(4, 400, V);
+    int V[3] = { 1, 1, 1 };
+    int n = 2, m = 100000, r = 10;
+    vector<operacion> resultado = operaciones_que_resuelven(n, r, m, V);
     return 0;
 }
