@@ -44,6 +44,7 @@ bool suma_se_pasa(int n, vector<vector<int>> &solucion_parcial, int i, int j) {
            || suma_columna(solucion_parcial, i, j) > numero_magico;
 }
 
+// TODO: ver el nombre.
 bool suma_no_alcanza(int n, vector<vector<int>> &solucion_parcial, int i, int j) {
     int numero_magico = ((int)pow(n, 3) + n) / 2;
     if (i == n-1) return suma_columna(solucion_parcial, i, j) < numero_magico;

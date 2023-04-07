@@ -15,23 +15,25 @@ int k_esimo_cuadrado_magico(int k, int n, vector<vector<int>> &solucion_parcial,
 
     // TODO: Hay alguna forma más eficiente de guardar los valores que no fueron usados?
     for (int v = 1; v <= n*n; v++) {
-        if (!valores_usados.count(v)) {
+        if (!valores_usados.count(v)) { // O(log(n*n))
             solucion_parcial[i][j] = v;
-            if ( !suma_se_pasa(n, solucion_parcial, i, j) && !suma_no_alcanza(n, solucion_parcial, i, j) ) {
-                set<int> valores_usados_copy(valores_usados);
-                valores_usados_copy.insert(v);
-                k_esimo_cuadrado_magico(k, n, solucion_parcial, i + (int) (j + 1 == n), (j + 1) % n,valores_usados_copy);
+            if ( !suma_se_pasa(n, solucion_parcial, i, j) && !suma_no_alcanza(n, solucion_parcial, i, j) ) { // O(n)
+//                set<int> valores_usados_copy(valores_usados); // O(n*n)
+//                valores_usados_copy.insert(v); // O(log(n*n))
+                valores_usados.insert(v); // O(log(n*n))
+                k_esimo_cuadrado_magico(k, n, solucion_parcial, i + (int) (j + 1 == n), (j + 1) % n, valores_usados);
+                valores_usados.erase(v); // O(log(n*n))
                 if (r == k) return 0;
             }
         }
     }
 
-    if (i == 0 && j == 0 && r < k) cout << -1 ;
+    if (i == 0 && j == 0 && r < k) cout << -1;
 }
 
 int main() {
-    int k, n;
-    cin >> k >> n;
+    int n, k;
+    cin >> n >> k;
     vector<vector<int>> cuadrado_magico(n, vector<int>(n));
     set<int> valores_usados;
     k_esimo_cuadrado_magico(k, n, cuadrado_magico, 0, 0, valores_usados);
