@@ -11,9 +11,4 @@
 #include <tuple>
 using namespace std;
 
-int mod(int x, int m);
-bool combinacion_con_resto(int i, int k, int* v, tuple<bool, bool>** M);
-bool combinacion_con_resto_bottom_up(int* v);
-
-
 #endif //TP_1_POLINOMIO_RESTO_H
