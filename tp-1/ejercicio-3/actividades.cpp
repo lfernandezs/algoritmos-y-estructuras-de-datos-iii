@@ -2,20 +2,22 @@
         #include <stdio.h>
         #include <vector>
         #include <tuple>
+        #include <iostream>
+        #include <fstream>
+
         using namespace std;
          
-        int main()
+        int actividades_maximales(ifstream &input)
         {
             int n, s, t;
             vector<tuple<int, int, int> > S;
          
-            scanf("%d", &n);
+            input >> n;
             int maximo = -1, minimo = 2*n;
-            vector<vector<tuple<int, int, int> >> orden((2*n)+1);
+            vector<vector<tuple<int, int, int>>> orden((2*n)+1);
             for(int i = 0; i < n; i++)
             {
-                scanf("%d", &s);
-                scanf("%d", &t);
+                input >> s >> t;
                 orden[t].push_back({i+1, s, t});
             }
             
@@ -25,23 +27,14 @@
                 {
                     if(S.size() == 0)
                     {
-                        int minimo = (2*n)+1, minPos = -1;
-                        for(int j = 0; j < orden[i].size(); j++)
-                        {
-                            if(get<1>(orden[i][j]) < minimo)
-                            {
-                                minimo = get<1>(orden[i][j]);
-                                minPos = j;
-                            }
-                        }
-                        S.push_back(orden[i][minPos]);
+                        S.push_back(orden[i][0]);
                     }
                     else
                     {
                         int minimo = (2*n)+1, minPos = -1;
                         for(int j = 0; j < orden[i].size(); j++)
                         {
-                            if(get<1>(orden[i][j]) < minimo && get<1>(orden[i][j]) >= get<2>(S[S.size() - 1]))
+                            if(get<1>(orden[i][j]) >= get<2>(S[S.size() - 1]))
                             {
                                 minimo = get<1>(orden[i][j]);
                                 minPos = j;
@@ -52,8 +45,9 @@
                 }
             }
             
-            printf("%d\n", S.size());
-            for(auto i : S) printf("%d ", get<0>(i));
+            // cout << S.size() << endl;
+            // for(auto i : S) cout << get<0>(i) << " ";
+            // cout << "\n";
             
             return 0;
         }  
