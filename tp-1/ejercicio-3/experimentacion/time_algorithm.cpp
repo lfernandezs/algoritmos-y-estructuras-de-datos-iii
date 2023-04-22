@@ -1,9 +1,9 @@
 #include "../actividades.cpp"
 #include <chrono>
 
-int main() {
-    ifstream input_file("inputs/input.csv");
-    ofstream output_file("output.csv");
+void time_algorithm(string input_path, string output_path) {
+	ifstream input_file(input_path);
+    ofstream output_file(output_path);
     int n;
     input_file >> n;
     output_file << "n,time" << endl;
@@ -14,5 +14,10 @@ int main() {
         chrono::duration<double> diff = stop - start;
     output_file << i << "," << diff.count() << endl;
     }
+}
+
+int main() {
+    time_algorithm("inputs/input_sorted.csv", "output_sorted.csv");
+    time_algorithm("inputs/input_unsorted.csv", "output_unsorted.csv");
     return 0;
 }

@@ -2,7 +2,7 @@ from random import randint
 MAX_SIZE = 1000
 
 def generate_unsorted_random_instances():
-    f = open("inputs/input.csv", 'w')
+    f = open("inputs/input_unsorted.csv", 'w')
     instances = range(1, MAX_SIZE+1, 10)
     f.write(f"{len(instances)}\n")
     for size in instances:
@@ -15,7 +15,7 @@ def generate_unsorted_random_instances():
 
 def generate_sorted_random_instances():
     # Genera instancias ordenadas por end time
-    f = open("inputs/input.csv", 'w')
+    f = open("inputs/input_sorted.csv", 'w')
     instances = range(1, MAX_SIZE+1, 10)
     f.write(f"{len(instances)}\n")
     for size in instances:
@@ -27,4 +27,5 @@ def generate_sorted_random_instances():
             temp.append((start, end))
         f.write(" " + " ".join([str(start) + " " + str(end) for start, end in sorted(temp, key=lambda x: x[1])]) + '\n')
 
+generate_sorted_random_instances()
 generate_unsorted_random_instances()
