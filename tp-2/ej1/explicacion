@@ -1,0 +1,3 @@
+Ambas implementaciones funcionan.
+mejorado.cpp es el que implemente el algoritmo de puentes que dio en clase y el que mande al juez.
+puentes.cpp es el que implemente puentes con un algoritmo de una pagina que está en la parte de links de las diapos.
