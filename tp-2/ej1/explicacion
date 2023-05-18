@@ -1,3 +1,4 @@
 Ambas implementaciones funcionan.
-mejorado.cpp es el que implemente el algoritmo de puentes que dio en clase y el que mande al juez.
-puentes.cpp es el que implemente puentes con un algoritmo de una pagina que está en la parte de links de las diapos.
+mejorado.cpp: es la implementación donde use el algoritmo de puentes dado en clase y el que mandé al juez.
+puentes.cpp:es la implementación donde use un algoritmo de puentes encontrado en pagina que estaba referenciada
+            en los links de las diapos de la clase de DFS(puentes).
