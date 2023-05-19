@@ -2,11 +2,15 @@
 #include <vector>
 
 using namespace std;
-vector<vector<int> >adj;
+vector<vector<int>> adj;
 vector<int> parent;
-vector<bool>visitado;
-vector<int>d;
-vector<int>comp;
+vector<bool> visitado;
+vector<int> d;
+vector<int> comp;
+vector<int> orphans;
+vector<int> result;
+
+
 void dfs(int actual)
 {
     visitado[actual] = true;
@@ -31,7 +35,9 @@ int main()
     visitado.resize(n+1, false);
     d.resize(n+1, 0);
     comp.resize(n+1);
+
     for(int i = 1; i <= n; i++) comp[i] = i;
+
     for(int i = 0; i < m; i++)
     {
         int a, b;
@@ -44,37 +50,37 @@ int main()
         if(!visitado[i])
             dfs(i);
     }
-    /*
-    for(int i = 1; i <=n; i++)
-        cout << d[i]<< " ";
-    cout << endl; 
-*/
-    for(int a = 1; a <= n; a++)
-    {
-        for(int i = 0; i < adj[a].size(); i++)
-        {
-            int b = adj[a][i];
-            ///Caso: hay una arista que apunta a una raiz y son de distintas comp
-            if(parent[b] == -1 && comp[a] != comp[b])
-            {
-                parent[b] = a;
-            }
+
+    for (int i = 1; i <= n; i++) {
+        if (parent[i] == -1) {
+            orphans.push_back(i);
+            result.push_back(i);
         }
     }
-    int c = 0;
-    vector<int>solucion;
-    for(int i = 1; i <= n; i++)
-    {
-        if(parent[i] == -1)
-        {
-            c++;
-            solucion.push_back(i);
+
+    parent.resize(n+1, -1);
+    visitado.resize(n+1, false);
+
+    for (auto orphan:orphans) {
+        dfs(orphan);
+    }
+
+    // El resto son componentes fuertemente conexas (creo)
+    for (int i = 1; i <= n; i++) {
+        if (!visitado[i]) {
+            result.push_back(i);
+            dfs(i);
         }
     }
-    cout << c << endl;
-    for(auto domino:solucion)
-    {
-        cout << domino << " ";
+
+    cout << result.size() << endl;
+    for (int i = 0; i < result.size(); i++) {
+        if (i != result.size() - 1) {
+            cout << result[i] << " ";
+        } else {
+            cout << result[i] << endl;
+        }
     }
+
     return 0;
 }
