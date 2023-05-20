@@ -1,80 +1,76 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
-vector<vector<int> >adj;
-vector<int> parent;
-vector<bool>visitado;
-vector<int>d;
-vector<int>comp;
-void dfs(int actual)
+
+vector<int> color;
+vector<int> comp;
+stack<int> pila;
+
+void dfs(int actual, vector<vector<int>> &adj, bool kosaraju)
 {
-    visitado[actual] = true;
+    color[actual] = 1;
     for(auto hijo:adj[actual])
     {
-        if(!visitado[hijo])
+        if(color[hijo] == 0)
         {
-            parent[hijo] = actual;
-            d[hijo] = 1 + d[actual];
             comp[hijo] = comp[actual];
-            dfs(hijo);
+            dfs(hijo, adj, kosaraju);
         }
     }
+    color[actual] = 2;
+    if(!kosaraju) pila.push(actual);
 }
 
 int main()
 {
     int n, m;
     scanf("%d%d",&n,&m);
-    adj.resize(n+1);
-    parent.resize(n+1, -1);
-    visitado.resize(n+1, false);
-    d.resize(n+1, 0);
+    color.resize(n+1, 0);
     comp.resize(n+1);
+    vector<vector<int>> adj(n+1);
+    vector<vector<int>> adj_invertido(n+1);
+
     for(int i = 1; i <= n; i++) comp[i] = i;
+
     for(int i = 0; i < m; i++)
     {
         int a, b;
         scanf("%d%d",&a,&b);
         adj[a].push_back(b);
+        adj_invertido[b].push_back(a);
     }
 
-    for(int i = 1; i <= n; i++)
-    {
-        if(!visitado[i])
-            dfs(i);
+    // Kosaraju
+    // Primer corrida de dfs
+    for(int i = 1; i <= n; i++) if(color[i] == 0) dfs(i, adj, false);
+
+    // DFS sobre grafo invertido
+    color.clear();
+    color.resize(n+1, 0);
+    for(int i = 1; i <= n; i++) comp[i] = i;
+    while (pila.size()) {
+        int nodo = pila.top();
+        pila.pop();
+        dfs(nodo, adj_invertido, true);
     }
-    /*
-    for(int i = 1; i <=n; i++)
-        cout << d[i]<< " ";
-    cout << endl; 
-*/
-    for(int a = 1; a <= n; a++)
+
+    // verificamos que aristas nos sirven y contamos las entradas a cada componente
+    vector<int>entradas(n+1, 0);
+    for (int a = 1; a <= n; a++)
     {
-        for(int i = 0; i < adj[a].size(); i++)
-        {
-            int b = adj[a][i];
-            ///Caso: hay una arista que apunta a una raiz y son de distintas comp
-            if(parent[b] == -1 && comp[a] != comp[b])
-            {
-                parent[b] = a;
-            }
-        }
+        for (auto b : adj[a])
+            if(comp[a] != comp[b]) entradas[comp[b]]++;
     }
-    int c = 0;
-    vector<int>solucion;
-    for(int i = 1; i <= n; i++)
-    {
-        if(parent[i] == -1)
-        {
-            c++;
-            solucion.push_back(i);
-        }
+    
+    vector<int> result;
+    for (int i = 1; i <= n; i++) {
+        if (comp[i] == i && entradas[i] == 0) result.push_back(i);
     }
-    cout << c << endl;
-    for(auto domino:solucion)
-    {
-        cout << domino << " ";
-    }
+
+    printf("%d\n", result.size());
+    for (int i = 0; i < result.size(); i++) printf("%d ", result[i]);
+
     return 0;
 }
