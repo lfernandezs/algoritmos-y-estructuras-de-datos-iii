@@ -62,12 +62,16 @@ struct DSU_without_path_compression{
     }
 
     void unite(int u, int v){
-        u = find(u), v = find(v);
-        if(u == v) return;
-        if(rank[u] < rank[v]) swap(u,v);
-        padre[v] = u;
-        rank[u] = max(rank[u],rank[v]+1);
+        int p_u = find(u), p_v = find(v);
+        if(p_u == p_v) return;
+        if(rank[p_u] < rank[p_v]) {
+            swap(u,v);
+            swap(p_u,p_v);
+        }
+            padre[v] = u;
+        rank[p_u] = max(rank[p_u],rank[p_v]+1);
     }
+    
     int padre[1001];
     int rank[1001] = {0};
 };
