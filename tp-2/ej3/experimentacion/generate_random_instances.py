@@ -23,6 +23,7 @@ def generate_random_instances():
             oficina = [1, 1]
             for k in range(i):
                 oficina = (1, oficina[1]+2*k)
+                # oficina = (randint(-10000, 10000), randint(-10000, 10000))
                 f.write(str(oficina[0]) + " " + str(oficina[1]) + " ")
             f.write("\n")
 

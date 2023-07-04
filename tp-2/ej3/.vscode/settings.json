@@ -33,6 +33,7 @@
         "tuple": "cpp",
         "variant": "cpp",
         "deque": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "iosfwd": "cpp"
     }
 }

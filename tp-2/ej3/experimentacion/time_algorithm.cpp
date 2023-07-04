@@ -1,5 +1,4 @@
 #include "../modems.cpp"
-#include <chrono>
 
 #define UNION_BY_RANK 0
 #define UNION_BY_SIZE 1
@@ -11,23 +10,29 @@ void time_algorithm(int method, string input_path, string output_path) {
     int n;
     input_file >> n;
     output_file << "n,time" << endl;
+    chrono::high_resolution_clock::time_point start, stop;
+    pair<chrono::high_resolution_clock::time_point, chrono::high_resolution_clock::time_point> result;
     for (int i=0; i<n; i++) {
-        auto start = chrono::high_resolution_clock::now();
         switch (method)
         {
         case UNION_BY_RANK:
-            modems_union_by_rank(input_file);
+            result = modems_union_by_rank(input_file);
+            start = result.first;
+            stop = result.second;
             break;
 
         case UNION_BY_SIZE:
-            modems_union_by_size(input_file);
+            result = modems_union_by_size(input_file);
+            start = result.first;
+            stop = result.second;
             break;
 
         case WITHOUT_PATH_COMPRESSION:
-            modems_without_path_compression(input_file);
+            result = modems_without_path_compression(input_file);
+            start = result.first;
+            stop = result.second;
             break;
         }
-        auto stop = chrono::high_resolution_clock::now();
         chrono::duration<double> diff = stop - start;
     output_file << i << "," << diff.count() << endl;
     }

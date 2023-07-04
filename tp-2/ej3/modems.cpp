@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <chrono>
 
 #define x first
 #define y second
@@ -37,7 +38,7 @@ struct DSU_by_size{
 
     int find(int v){
         if(v == padre[v]) return v;
-        return padre[v] = find(padre[v]);
+        return find(padre[v]);
     }
 
     void unite(int u, int v){
@@ -62,22 +63,14 @@ struct DSU_without_path_compression{
     }
 
     void unite(int u, int v){
-        int p_u = find(u), p_v = find(v);
-        if(p_u == p_v) return;
-        if(rank[p_u] < rank[p_v]) {
-            swap(u,v);
-            swap(p_u,p_v);
-        }
-            padre[v] = u;
-        rank[p_u] = max(rank[p_u],rank[p_v]+1);
+        u = find(u), v = find(v);
+        if(u == v) return;
+        padre[v] = padre[u];
     }
-    
     int padre[1001];
-    int rank[1001] = {0};
 };
 
 void kruskal_by_rank(int caso){
-    sort(E.begin(),E.end());
     int componentes = n;
     double resU = 0, resV = 0;
     DSU_by_rank dsu(n);
@@ -94,7 +87,6 @@ void kruskal_by_rank(int caso){
 }
 
 void kruskal_by_size(int caso){
-    sort(E.begin(),E.end());
     int componentes = n;
     double resU = 0, resV = 0;
     DSU_by_size dsu(n);
@@ -111,7 +103,6 @@ void kruskal_by_size(int caso){
 }
 
 void kruskal_without_path_compression(int caso){
-    sort(E.begin(),E.end());
     int componentes = n;
     double resU = 0, resV = 0;
     DSU_without_path_compression dsu(n);
@@ -132,9 +123,11 @@ double dist(pair<int,int> a, pair<int,int>b)
     return (double)sqrt((b.x - a.x)*(b.x - a.x)+(b.y - a.y)*(b.y - a.y));
 }
 
-void modems_union_by_rank(ifstream& input_file) {
+pair<chrono::high_resolution_clock::time_point, chrono::high_resolution_clock::time_point> modems_union_by_rank(ifstream& input_file) {
     int t, c = 0;
     input_file >> t;
+    chrono::high_resolution_clock::time_point start;
+    chrono::high_resolution_clock::time_point stop;
     while(c++ < t)
     {
         pair<int,int> coordenadas[1001];
@@ -156,14 +149,21 @@ void modems_union_by_rank(ifstream& input_file) {
                 else E.push_back({d*cu, i, j, 0});
             }
         }
+        sort(E.begin(),E.end());
+        start = chrono::high_resolution_clock::now();
         kruskal_by_rank(c);
+        stop = chrono::high_resolution_clock::now();
         E.clear();
     }
+
+    return make_pair(start, stop);
 }
 
-void modems_union_by_size(ifstream& input_file) {
+pair<chrono::high_resolution_clock::time_point, chrono::high_resolution_clock::time_point> modems_union_by_size(ifstream& input_file) {
     int t, c = 0;
     input_file >> t;
+    chrono::high_resolution_clock::time_point start;
+    chrono::high_resolution_clock::time_point stop;
     while(c++ < t)
     {
         pair<int,int> coordenadas[1001];
@@ -185,15 +185,21 @@ void modems_union_by_size(ifstream& input_file) {
                 else E.push_back({d*cu, i, j, 0});
             }
         }
+        sort(E.begin(),E.end());
+        start = chrono::high_resolution_clock::now();
         kruskal_by_size(c);
+        stop = chrono::high_resolution_clock::now();
         E.clear();
     }
+        return make_pair(start, stop);
 }
 
 
-void modems_without_path_compression(ifstream& input_file) {
+pair<chrono::high_resolution_clock::time_point, chrono::high_resolution_clock::time_point> modems_without_path_compression(ifstream& input_file) {
     int t, c = 0;
     input_file >> t;
+    chrono::high_resolution_clock::time_point start;
+    chrono::high_resolution_clock::time_point stop;
     while(c++ < t)
     {
         pair<int,int> coordenadas[1001];
@@ -215,7 +221,11 @@ void modems_without_path_compression(ifstream& input_file) {
                 else E.push_back({d*cu, i, j, 0});
             }
         }
+        sort(E.begin(),E.end());
+        start = chrono::high_resolution_clock::now();
         kruskal_without_path_compression(c);
+        stop = chrono::high_resolution_clock::now();
         E.clear();
     }
+        return make_pair(start, stop);
 }
