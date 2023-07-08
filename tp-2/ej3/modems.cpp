@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <chrono>
 
 #define x first
 #define y second
@@ -10,9 +11,9 @@ const ll inf = 1e18;
 
 int n, limit, modems, cu, cv;
 vector<tuple<double,int,int, int>> E;
-struct DSU{
+struct DSU_by_rank{
 
-    DSU(int n){ for(int v = 0; v < n; v++) padre[v] = v;}
+    DSU_by_rank(int n): padre(n), rank(n,0){ for(int v = 0; v < n; v++) padre[v] = v;}
 
     int find(int v){
         if(v == padre[v]) return v;
@@ -26,15 +27,85 @@ struct DSU{
         padre[v] = padre[u];
         rank[u] = max(rank[u],rank[v]+1);
     }
-    int padre[1001];
-    int rank[1001] = {0};
+    vector<int> padre;
+    vector<int> rank;
 };
 
-void kruskal(int caso){
-    sort(E.begin(),E.end());
+
+struct DSU_by_size{
+
+    DSU_by_size(int n): padre(n), rank(n,1) {for(int v = 0; v < n; v++) padre[v] = v;}
+
+    int find(int v){
+        if(v == padre[v]) return v;
+        return find(padre[v]);
+    }
+
+    void unite(int u, int v){
+        u = find(u), v = find(v);
+        if(u == v) return;
+        if(rank[u] < rank[v]) swap(u,v);
+        padre[v] = padre[u];
+        rank[u] += rank[v];
+    }
+    vector<int> padre;
+    vector<int> rank;
+};
+
+
+struct DSU_without_path_compression{
+
+    DSU_without_path_compression(int n): padre(n){ for(int v = 0; v < n; v++) padre[v] = v;}
+
+    int find(int v){
+        if(v == padre[v]) return v;
+        return find(padre[v]);
+    }
+
+    void unite(int u, int v){
+        u = find(u), v = find(v);
+        if(u == v) return;
+        padre[v] = padre[u];
+    }
+    vector<int> padre;
+};
+
+void kruskal_by_rank(int caso){
     int componentes = n;
     double resU = 0, resV = 0;
-    DSU dsu(n);
+    DSU_by_rank dsu(n);
+    for(auto [c,u,v,t] : E){
+        //si (u,v) es arista segura
+        if(dsu.find(u) != dsu.find(v)){
+            dsu.unite(u,v);
+            if(t == 0) resU += c; else resV += c;
+            componentes--;
+            if(componentes == modems) break;
+        }
+    }
+    printf("Caso #%d: %.3f %.3f\n", caso, resU, resV);
+}
+
+void kruskal_by_size(int caso){
+    int componentes = n;
+    double resU = 0, resV = 0;
+    DSU_by_size dsu(n);
+    for(auto [c,u,v,t] : E){
+        //si (u,v) es arista segura
+        if(dsu.find(u) != dsu.find(v)){
+            dsu.unite(u,v);
+            if(t == 0) resU += c; else resV += c;
+            componentes--;
+            if(componentes == modems) break;
+        }
+    }
+    printf("Caso #%d: %.3f %.3f\n", caso, resU, resV);
+}
+
+void kruskal_without_path_compression(int caso){
+    int componentes = n;
+    double resU = 0, resV = 0;
+    DSU_without_path_compression dsu(n);
     for(auto [c,u,v,t] : E){
         //si (u,v) es arista segura
         if(dsu.find(u) != dsu.find(v)){
@@ -51,17 +122,20 @@ double dist(pair<int,int> a, pair<int,int>b)
 {
     return (double)sqrt((b.x - a.x)*(b.x - a.x)+(b.y - a.y)*(b.y - a.y));
 }
-int main() {
+
+pair<chrono::high_resolution_clock::time_point, chrono::high_resolution_clock::time_point> modems_union_by_rank(ifstream& input_file) {
     int t, c = 0;
-    scanf("%d", &t);
+    input_file >> t;
+    chrono::high_resolution_clock::time_point start;
+    chrono::high_resolution_clock::time_point stop;
     while(c++ < t)
     {
         pair<int,int> coordenadas[1001];
-        scanf("%d%d%d%d%d", &n, &limit, &modems, &cu, &cv);
+        input_file >> n >> limit >> modems >> cu >> cv;
         for(int i = 0; i < n; i++)
         {
             int a, b;
-            scanf("%d%d", &a, &b);
+            input_file >> a >> b;
             coordenadas[i] = {a,b};
         }
         //crear aristas
@@ -75,8 +149,83 @@ int main() {
                 else E.push_back({d*cu, i, j, 0});
             }
         }
-        kruskal(c);
+        sort(E.begin(),E.end());
+        start = chrono::high_resolution_clock::now();
+        kruskal_by_rank(c);
+        stop = chrono::high_resolution_clock::now();
         E.clear();
     }
-    return 0;
+
+    return make_pair(start, stop);
+}
+
+pair<chrono::high_resolution_clock::time_point, chrono::high_resolution_clock::time_point> modems_union_by_size(ifstream& input_file) {
+    int t, c = 0;
+    input_file >> t;
+    chrono::high_resolution_clock::time_point start;
+    chrono::high_resolution_clock::time_point stop;
+    while(c++ < t)
+    {
+        pair<int,int> coordenadas[1001];
+        input_file >> n >> limit >> modems >> cu >> cv;
+        for(int i = 0; i < n; i++)
+        {
+            int a, b;
+            input_file >> a >> b;
+            coordenadas[i] = {a,b};
+        }
+        //crear aristas
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = i + 1; j < n; j++)
+            {
+                double d = dist(coordenadas[i], coordenadas[j]);
+                if(d > limit)
+                    E.push_back({d*cv, i, j, 1});
+                else E.push_back({d*cu, i, j, 0});
+            }
+        }
+        sort(E.begin(),E.end());
+        start = chrono::high_resolution_clock::now();
+        kruskal_by_size(c);
+        stop = chrono::high_resolution_clock::now();
+        E.clear();
+    }
+        return make_pair(start, stop);
+}
+
+
+pair<chrono::high_resolution_clock::time_point, chrono::high_resolution_clock::time_point> modems_without_path_compression(ifstream& input_file) {
+    int t, c = 0;
+    input_file >> t;
+    chrono::high_resolution_clock::time_point start;
+    chrono::high_resolution_clock::time_point stop;
+    while(c++ < t)
+    {
+        pair<int,int> coordenadas[1001];
+        input_file >> n >> limit >> modems >> cu >> cv;
+        for(int i = 0; i < n; i++)
+        {
+            int a, b;
+            input_file >> a >> b;
+            coordenadas[i] = {a,b};
+        }
+        //crear aristas
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = i + 1; j < n; j++)
+            {
+                double d = dist(coordenadas[i], coordenadas[j]);
+                if(d > limit)
+                    E.push_back({d*cv, i, j, 1});
+                else E.push_back({d*cu, i, j, 0});
+            }
+        }
+        sort(E.begin(),E.end());
+        start = chrono::high_resolution_clock::now();
+        kruskal_without_path_compression(c);
+        stop = chrono::high_resolution_clock::now();
+        E.clear();
+    }
+        return make_pair(start, stop);
 }
