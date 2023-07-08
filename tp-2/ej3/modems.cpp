@@ -13,7 +13,7 @@ int n, limit, modems, cu, cv;
 vector<tuple<double,int,int, int>> E;
 struct DSU_by_rank{
 
-    DSU_by_rank(int n){ for(int v = 0; v < n; v++) padre[v] = v;}
+    DSU_by_rank(int n): padre(n), rank(n,0){ for(int v = 0; v < n; v++) padre[v] = v;}
 
     int find(int v){
         if(v == padre[v]) return v;
@@ -27,14 +27,14 @@ struct DSU_by_rank{
         padre[v] = padre[u];
         rank[u] = max(rank[u],rank[v]+1);
     }
-    int padre[1001];
-    int rank[1001] = {0};
+    vector<int> padre;
+    vector<int> rank;
 };
 
 
 struct DSU_by_size{
 
-    DSU_by_size(int n){ for(int v = 0; v < n; v++) padre[v] = v;}
+    DSU_by_size(int n): padre(n), rank(n,1) {for(int v = 0; v < n; v++) padre[v] = v;}
 
     int find(int v){
         if(v == padre[v]) return v;
@@ -48,14 +48,14 @@ struct DSU_by_size{
         padre[v] = padre[u];
         rank[u] += rank[v];
     }
-    int padre[1001];
-    int rank[1001] = {0};
+    vector<int> padre;
+    vector<int> rank;
 };
 
 
 struct DSU_without_path_compression{
 
-    DSU_without_path_compression(int n){ for(int v = 0; v < n; v++) padre[v] = v;}
+    DSU_without_path_compression(int n): padre(n){ for(int v = 0; v < n; v++) padre[v] = v;}
 
     int find(int v){
         if(v == padre[v]) return v;
@@ -67,7 +67,7 @@ struct DSU_without_path_compression{
         if(u == v) return;
         padre[v] = padre[u];
     }
-    int padre[1001];
+    vector<int> padre;
 };
 
 void kruskal_by_rank(int caso){
